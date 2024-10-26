@@ -217,7 +217,8 @@ Assemble::Assemble(std::string filePath) {
 						} break;
 						}
 					} break;
-					case IMMEDIATE || HEX: {
+					case IMMEDIATE:
+					case HEX: {
 						Token value2 = NextTokenC(pos, tokens);
 						switch (value2.type) {
 						case REG: {
@@ -238,7 +239,7 @@ Assemble::Assemble(std::string filePath) {
 					}
 				} break;
 				default: {
-					ERROR("invalid SUB destination!");
+					ERROR("invalid ADD destination!");
 					exit(1);
 				} break;
 				}
@@ -326,7 +327,8 @@ Assemble::Assemble(std::string filePath) {
 							PushNumberU16(program, value1);
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE || HEX: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(MUL_I);
 							program.push_back(StringToRegister(dest.value));
 							PushNumberU16(program, value1);
@@ -337,7 +339,7 @@ Assemble::Assemble(std::string filePath) {
 					}
 				} break;
 				default: {
-					ERROR("invalid SUB destination!");
+					ERROR("invalid MUL destination!");
 					exit(1);
 				} break;
 				}
@@ -387,7 +389,7 @@ Assemble::Assemble(std::string filePath) {
 					}
 				} break;
 				default: {
-					ERROR("invalid SUB destination!");
+					ERROR("invalid DIV destination!");
 					exit(1);
 				} break;
 				}
@@ -425,7 +427,8 @@ Assemble::Assemble(std::string filePath) {
 							PushNumberU16(program, value1);
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE || HEX: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(ADC_I);
 							program.push_back(StringToRegister(dest.value));
 							PushNumberU16(program, value1);
@@ -436,7 +439,7 @@ Assemble::Assemble(std::string filePath) {
 					}
 				} break;
 				default: {
-					ERROR("invalid SUB destination!");
+					ERROR("invalid ADC destination!");
 					exit(1);
 				} break;
 				}
@@ -486,7 +489,264 @@ Assemble::Assemble(std::string filePath) {
 					}
 				} break;
 				default: {
-					ERROR("invalid SUB destination!");
+					ERROR("invalid SBC destination!");
+					exit(1);
+				} break;
+				}
+			} else if (tok.value == "AND") {
+				Token dest = NextToken(pos, tokens);
+				switch (dest.type) {
+				case REG: {
+					Token value1 = NextTokenC(pos, tokens);
+					switch (value1.type) {
+					case REG: {
+						Token value2 = NextTokenC(pos, tokens);
+						switch (value2.type) {
+						case REG: {
+							program.push_back(AND_R);
+							program.push_back(StringToRegister(dest.value));
+							program.push_back(StringToRegister(value1.value));
+							program.push_back(StringToRegister(value2.value));
+						} break;
+						case IMMEDIATE:
+						case HEX: {
+							program.push_back(AND_RI);
+							program.push_back(StringToRegister(dest.value));
+							program.push_back(StringToRegister(value1.value));
+							PushNumberU16(program, value2);
+						} break;
+						}
+					} break;
+					case IMMEDIATE:
+					case HEX: {
+						Token value2 = NextTokenC(pos, tokens);
+						switch (value2.type) {
+						case REG: {
+							program.push_back(AND_IR);
+							program.push_back(StringToRegister(dest.value));
+							PushNumberU16(program, value1);
+							program.push_back(StringToRegister(value2.value));
+						} break;
+						case IMMEDIATE:
+						case HEX: {
+							program.push_back(AND_I);
+							program.push_back(StringToRegister(dest.value));
+							PushNumberU16(program, value1);
+							PushNumberU16(program, value2);
+						} break;
+						}
+					} break;
+					}
+				} break;
+				default: {
+					ERROR("invalid AND destination!");
+					exit(1);
+				} break;
+				}
+			} else if (tok.value == "OR") {
+				Token dest = NextToken(pos, tokens);
+				switch (dest.type) {
+				case REG: {
+					Token value1 = NextTokenC(pos, tokens);
+					switch (value1.type) {
+					case REG: {
+						Token value2 = NextTokenC(pos, tokens);
+						switch (value2.type) {
+						case REG: {
+							program.push_back(OR_R);
+							program.push_back(StringToRegister(dest.value));
+							program.push_back(StringToRegister(value1.value));
+							program.push_back(StringToRegister(value2.value));
+						} break;
+						case IMMEDIATE:
+						case HEX: {
+							program.push_back(OR_RI);
+							program.push_back(StringToRegister(dest.value));
+							program.push_back(StringToRegister(value1.value));
+							PushNumberU16(program, value2);
+						} break;
+						}
+					} break;
+					case IMMEDIATE:
+					case HEX: {
+						Token value2 = NextTokenC(pos, tokens);
+						switch (value2.type) {
+						case REG: {
+							program.push_back(OR_IR);
+							program.push_back(StringToRegister(dest.value));
+							PushNumberU16(program, value1);
+							program.push_back(StringToRegister(value2.value));
+						} break;
+						case IMMEDIATE:
+						case HEX: {
+							program.push_back(OR_I);
+							program.push_back(StringToRegister(dest.value));
+							PushNumberU16(program, value1);
+							PushNumberU16(program, value2);
+						} break;
+						}
+					} break;
+					}
+				} break;
+				default: {
+					ERROR("invalid OR destination!");
+					exit(1);
+				} break;
+				}
+			} else if (tok.value == "XOR") {
+				Token dest = NextToken(pos, tokens);
+				switch (dest.type) {
+				case REG: {
+					Token value1 = NextTokenC(pos, tokens);
+					switch (value1.type) {
+					case REG: {
+						Token value2 = NextTokenC(pos, tokens);
+						switch (value2.type) {
+						case REG: {
+							program.push_back(XOR_R);
+							program.push_back(StringToRegister(dest.value));
+							program.push_back(StringToRegister(value1.value));
+							program.push_back(StringToRegister(value2.value));
+						} break;
+						case IMMEDIATE:
+						case HEX: {
+							program.push_back(XOR_RI);
+							program.push_back(StringToRegister(dest.value));
+							program.push_back(StringToRegister(value1.value));
+							PushNumberU16(program, value2);
+						} break;
+						}
+					} break;
+					case IMMEDIATE:
+					case HEX: {
+						Token value2 = NextTokenC(pos, tokens);
+						switch (value2.type) {
+						case REG: {
+							program.push_back(XOR_IR);
+							program.push_back(StringToRegister(dest.value));
+							PushNumberU16(program, value1);
+							program.push_back(StringToRegister(value2.value));
+						} break;
+						case IMMEDIATE:
+						case HEX: {
+							program.push_back(XOR_I);
+							program.push_back(StringToRegister(dest.value));
+							PushNumberU16(program, value1);
+							PushNumberU16(program, value2);
+						} break;
+						}
+					} break;
+					}
+				} break;
+				default: {
+					ERROR("invalid XOR destination!");
+					exit(1);
+				} break;
+				}
+			} else if (tok.value == "NOT") {
+				Token dest = NextToken(pos, tokens);
+				Token reg = NextTokenC(pos, tokens);
+
+				program.push_back(NOT_R);
+				program.push_back(StringToRegister(dest.value));
+				program.push_back(StringToRegister(reg.value));
+			} else if (tok.value == "SHL") {
+				Token dest = NextToken(pos, tokens);
+				switch (dest.type) {
+				case REG: {
+					Token value1 = NextTokenC(pos, tokens);
+					switch (value1.type) {
+					case REG: {
+						Token value2 = NextTokenC(pos, tokens);
+						switch (value2.type) {
+						case REG: {
+							program.push_back(SHL_R);
+							program.push_back(StringToRegister(dest.value));
+							program.push_back(StringToRegister(value1.value));
+							program.push_back(StringToRegister(value2.value));
+						} break;
+						case IMMEDIATE:
+						case HEX: {
+							program.push_back(SHL_RI);
+							program.push_back(StringToRegister(dest.value));
+							program.push_back(StringToRegister(value1.value));
+							PushNumberU16(program, value2);
+						} break;
+						}
+					} break;
+					case IMMEDIATE:
+					case HEX: {
+						Token value2 = NextTokenC(pos, tokens);
+						switch (value2.type) {
+						case REG: {
+							program.push_back(SHL_IR);
+							program.push_back(StringToRegister(dest.value));
+							PushNumberU16(program, value1);
+							program.push_back(StringToRegister(value2.value));
+						} break;
+						case IMMEDIATE:
+						case HEX: {
+							program.push_back(SHL_I);
+							program.push_back(StringToRegister(dest.value));
+							PushNumberU16(program, value1);
+							PushNumberU16(program, value2);
+						} break;
+						}
+					} break;
+					}
+				} break;
+				default: {
+					ERROR("invalid SHL destination!");
+					exit(1);
+				} break;
+				}
+			} else if (tok.value == "SHR") {
+				Token dest = NextToken(pos, tokens);
+				switch (dest.type) {
+				case REG: {
+					Token value1 = NextTokenC(pos, tokens);
+					switch (value1.type) {
+					case REG: {
+						Token value2 = NextTokenC(pos, tokens);
+						switch (value2.type) {
+						case REG: {
+							program.push_back(SHR_R);
+							program.push_back(StringToRegister(dest.value));
+							program.push_back(StringToRegister(value1.value));
+							program.push_back(StringToRegister(value2.value));
+						} break;
+						case IMMEDIATE:
+						case HEX: {
+							program.push_back(SHR_RI);
+							program.push_back(StringToRegister(dest.value));
+							program.push_back(StringToRegister(value1.value));
+							PushNumberU16(program, value2);
+						} break;
+						}
+					} break;
+					case IMMEDIATE:
+					case HEX: {
+						Token value2 = NextTokenC(pos, tokens);
+						switch (value2.type) {
+						case REG: {
+							program.push_back(SHR_IR);
+							program.push_back(StringToRegister(dest.value));
+							PushNumberU16(program, value1);
+							program.push_back(StringToRegister(value2.value));
+						} break;
+						case IMMEDIATE:
+						case HEX: {
+							program.push_back(SHR_I);
+							program.push_back(StringToRegister(dest.value));
+							PushNumberU16(program, value1);
+							PushNumberU16(program, value2);
+						} break;
+						}
+					} break;
+					}
+				} break;
+				default: {
+					ERROR("invalid SHR destination!");
 					exit(1);
 				} break;
 				}
