@@ -6,7 +6,7 @@
 
 namespace REASM {
 
-static std::string trim(std::string &str) {
+static std::string Trim(std::string &str) {
 	str.erase(str.begin(), std::find_if_not(str.begin(), str.end(), [](unsigned char c) {
         return std::isspace(c);
     }));
@@ -16,6 +16,12 @@ static std::string trim(std::string &str) {
     }).base(), str.end());
 
     return str;
+}
+
+std::string ToUppercase(std::string &str) {
+	std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+
+	return str;
 }
 
 static Token TokenizeWord(int &pos, std::string line, std::vector<Token> tokens) {
@@ -80,14 +86,15 @@ static Token TokenizeHex(int &pos, std::string line) {
 }
 
 static void TokenizeLine(std::string line, std::vector<Token> &tokens) {
-    line = trim(line);
+    line = Trim(line);
+	line = ToUppercase(line);
 
     if (!line.empty()) {
         if (line.find(':') == line.size() - 1) {
             line.pop_back();
             tokens.push_back(Token { .type = LABEL, .value = line });
         } else {
-            int pos = 0;
+			int pos = 0;
             while (pos < line.size()) {
                 char current = line[pos];
 
@@ -101,7 +108,7 @@ static void TokenizeLine(std::string line, std::vector<Token> &tokens) {
                     continue;
                 }
 
-                if (current == '0' && pos + 1 < line.size() && line[pos + 1] == 'x') {
+                if (current == '0' && pos + 1 < line.size() && line[pos + 1] == 'X') {
                     tokens.push_back(TokenizeHex(pos, line));
                     continue;
                 }

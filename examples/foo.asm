@@ -2,7 +2,7 @@ ORG 0xD000
 
 _START:
 	MOV R0, 0x0034
-	MOV R1, R0
+	mov R1, R0
 	MOV R2, #32
 
 	ADD R2, R0, R2
