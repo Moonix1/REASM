@@ -525,20 +525,20 @@ Assemble::Assemble(std::string filePath) {
 					exit(1);
 				} break;
 				}
+			} else if (tok.value == "JMP") {
+				GotoLabel(JMP, tokens, program, pos);
+			} else if (tok.value == "JNZ") {
+				GotoLabel(JNZ, tokens, program, pos);
 			} else if (tok.value == "JZ") {
-				uint16_t addr;
-				for (Label label : m_Labels) {
-					if (label.name == ExpectNextToken(pos, tokens, LABEL).value) {
-						addr = label.addr;
-						goto no_error;
-					}
-				}
-
-				ERROR("Invalid LABEL!");
-				exit(1);
-			no_error:
-				program.push_back(JZ);
-				PushNumberU16(program, Token { .type = IMMEDIATE, .value = std::to_string(addr) });
+				GotoLabel(JZ, tokens, program, pos);
+			} else if (tok.value == "JNC") {
+				GotoLabel(JNC, tokens, program, pos);
+			} else if (tok.value == "JC") {
+				GotoLabel(JZ, tokens, program, pos);
+			} else if (tok.value == "JNS") {
+				GotoLabel(JNS, tokens, program, pos);
+			} else if (tok.value == "JS") {
+				GotoLabel(JS, tokens, program, pos);
 			} else if (tok.value == "HLT") {
 				program.push_back(HLT);
 			};
@@ -558,6 +558,22 @@ Assemble::Assemble(std::string filePath) {
 	file.write(reinterpret_cast<const char*>(program.data()), program.size());
 
 	file.close();
+}
+
+void Assemble::GotoLabel(uint8_t opcode, std::vector<Token> tokens, std::vector<uint8_t>& program, int& pos) {
+	uint16_t addr;
+	for (Label label : m_Labels) {
+		if (label.name == ExpectNextToken(pos, tokens, LABEL).value) {
+			addr = label.addr;
+			goto no_error;
+		}
+	}
+
+	ERROR("Invalid LABEL!");
+	exit(1);
+no_error:
+	program.push_back(opcode);
+	PushNumberU16(program, Token { .type = IMMEDIATE, .value = std::to_string(addr) });
 }
 
 }
