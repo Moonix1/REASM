@@ -44,13 +44,22 @@ void PushU16(std::vector<uint8_t> &binSource, uint16_t number) {
 	binSource.push_back(number & 0xFF);
 }
 
-void PushNumberU16(std::vector<uint8_t> &binSource, std::string number) {
-	char *end;
-	uint16_t value = (uint16_t)std::strtol(number.c_str(), &end, 10);
-	binSource.push_back(value & 0xFF);
-	binSource.push_back((value >> 8) & 0xFF);
+void PushNumberU16(std::vector<uint8_t> &binSource, Token number) {
+	if (number.type == IMMEDIATE) {
+		char *end;
+		uint16_t value = (uint16_t)std::strtol(number.value.c_str(), &end, 10);
+		binSource.push_back(value & 0xFF);
+		binSource.push_back((value >> 8) & 0xFF);
+	} else if (number.type == HEX) {
+		uint16_t value = static_cast<uint16_t>(std::stoul(number.value, nullptr, 16));
+		binSource.push_back(value & 0xFF);
+		binSource.push_back((value >> 8) & 0xFF);
+	} else {
+		ERROR("Invalid VALUE for translation!");
+		exit(1);
+	}
 }
-	
+
 void PushNumberU8(std::vector<uint8_t> &binSource, std::string number) {
 	char *end;
 	uint8_t value = (uint8_t)std::strtol(number.c_str(), &end, 10);
@@ -166,10 +175,11 @@ Assemble::Assemble(std::string filePath) {
 				case REG: {
 					Token value = NextTokenC(pos, tokens);
 					switch (value.type) {
-					case IMMEDIATE: {
+					case IMMEDIATE:
+					case HEX: {
 						program.push_back(MOV_IM);
 						program.push_back(StringToRegister(dest.value));
-						PushNumberU16(program, value.value);
+						PushNumberU16(program, value);
 					} break;
 					case REG: {
 						program.push_back(MOV_R);
@@ -198,28 +208,30 @@ Assemble::Assemble(std::string filePath) {
 							program.push_back(StringToRegister(value1.value));
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(ADD_RI);
 							program.push_back(StringToRegister(dest.value));
 							program.push_back(StringToRegister(value1.value));
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
-					case IMMEDIATE: {
+					case IMMEDIATE || HEX: {
 						Token value2 = NextTokenC(pos, tokens);
 						switch (value2.type) {
 						case REG: {
 							program.push_back(ADD_IR);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
+							PushNumberU16(program, value1);
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(ADD_I);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value1);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
@@ -245,28 +257,31 @@ Assemble::Assemble(std::string filePath) {
 							program.push_back(StringToRegister(value1.value));
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(SUB_RI);
 							program.push_back(StringToRegister(dest.value));
 							program.push_back(StringToRegister(value1.value));
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
-					case IMMEDIATE: {
+					case IMMEDIATE:
+					case HEX: {
 						Token value2 = NextTokenC(pos, tokens);
 						switch (value2.type) {
 						case REG: {
 							program.push_back(SUB_IR);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
+							PushNumberU16(program, value1);
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(SUB_I);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value1);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
@@ -292,28 +307,30 @@ Assemble::Assemble(std::string filePath) {
 							program.push_back(StringToRegister(value1.value));
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(MUL_RI);
 							program.push_back(StringToRegister(dest.value));
 							program.push_back(StringToRegister(value1.value));
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
-					case IMMEDIATE: {
+					case IMMEDIATE:
+					case HEX: {
 						Token value2 = NextTokenC(pos, tokens);
 						switch (value2.type) {
 						case REG: {
 							program.push_back(MUL_IR);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
+							PushNumberU16(program, value1);
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE || HEX: {
 							program.push_back(MUL_I);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value1);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
@@ -339,28 +356,31 @@ Assemble::Assemble(std::string filePath) {
 							program.push_back(StringToRegister(value1.value));
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(DIV_RI);
 							program.push_back(StringToRegister(dest.value));
 							program.push_back(StringToRegister(value1.value));
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
-					case IMMEDIATE: {
+					case IMMEDIATE:
+					case HEX: {
 						Token value2 = NextTokenC(pos, tokens);
 						switch (value2.type) {
 						case REG: {
 							program.push_back(DIV_IR);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
+							PushNumberU16(program, value1);
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(DIV_I);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value1);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
@@ -386,28 +406,30 @@ Assemble::Assemble(std::string filePath) {
 							program.push_back(StringToRegister(value1.value));
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(ADC_RI);
 							program.push_back(StringToRegister(dest.value));
 							program.push_back(StringToRegister(value1.value));
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
-					case IMMEDIATE: {
+					case IMMEDIATE:
+					case HEX: {
 						Token value2 = NextTokenC(pos, tokens);
 						switch (value2.type) {
 						case REG: {
 							program.push_back(ADC_IR);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
+							PushNumberU16(program, value1);
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE || HEX: {
 							program.push_back(ADC_I);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value1);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
@@ -433,28 +455,31 @@ Assemble::Assemble(std::string filePath) {
 							program.push_back(StringToRegister(value1.value));
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(SBC_RI);
 							program.push_back(StringToRegister(dest.value));
 							program.push_back(StringToRegister(value1.value));
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
-					case IMMEDIATE: {
+					case IMMEDIATE:
+					case HEX: {
 						Token value2 = NextTokenC(pos, tokens);
 						switch (value2.type) {
 						case REG: {
 							program.push_back(SBC_IR);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
+							PushNumberU16(program, value1);
 							program.push_back(StringToRegister(value2.value));
 						} break;
-						case IMMEDIATE: {
+						case IMMEDIATE:
+						case HEX: {
 							program.push_back(SBC_I);
 							program.push_back(StringToRegister(dest.value));
-							PushNumberU16(program, value1.value);
-							PushNumberU16(program, value2.value);
+							PushNumberU16(program, value1);
+							PushNumberU16(program, value2);
 						} break;
 						}
 					} break;
@@ -476,20 +501,22 @@ Assemble::Assemble(std::string filePath) {
 						program.push_back(StringToRegister(value1.value));
 						program.push_back(StringToRegister(value2.value));
 					} break;
-					case IMMEDIATE: {
+					case IMMEDIATE:
+					case HEX: {
 						program.push_back(CMP_RI);
 						program.push_back(StringToRegister(value1.value));
-						PushNumberU16(program, value2.value);
+						PushNumberU16(program, value2);
 					} break;
 					}
 				} break;
-				case IMMEDIATE: {
+				case IMMEDIATE:
+				case HEX: {
 					Token value2 = NextTokenC(pos, tokens);
 					switch (value2.type) {
 					case REG: {
 						program.push_back(CMP_RI);
 						program.push_back(StringToRegister(value1.value));
-						PushNumberU16(program, value2.value);
+						PushNumberU16(program, value2);
 					} break;
 					}
 				} break;
@@ -511,7 +538,7 @@ Assemble::Assemble(std::string filePath) {
 				exit(1);
 			no_error:
 				program.push_back(JZ);
-				PushNumberU16(program, std::to_string(addr));
+				PushNumberU16(program, Token { .type = IMMEDIATE, .value = std::to_string(addr) });
 			} else if (tok.value == "HLT") {
 				program.push_back(HLT);
 			};
