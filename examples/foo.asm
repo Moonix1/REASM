@@ -1,0 +1,13 @@
+ORG 0xD000
+
+_START:
+	MOV R0, #52
+	MOV R1, R0
+	MOV R2, #32
+
+	ADD R2, R0, R2
+	SUB R3, R0, R2
+
+	CMP R1, #52
+	JZ _START
+	HLT
