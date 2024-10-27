@@ -39,50 +39,53 @@ constexpr uint8_t DIV_I					= 0x1B;
 constexpr uint8_t DIV_RI				= 0x1C;
 constexpr uint8_t DIV_IR				= 0x1D;
 
-constexpr uint8_t AND_R					= 0x1E;
-constexpr uint8_t AND_I					= 0x1F;
-constexpr uint8_t AND_RI				= 0x20;
-constexpr uint8_t AND_IR				= 0x21;
+constexpr uint8_t DEC_R					= 0x1E;
+constexpr uint8_t INC_R					= 0x1F;
 
-constexpr uint8_t OR_R					= 0x22;
-constexpr uint8_t OR_I					= 0x23;
-constexpr uint8_t OR_RI					= 0x24;
-constexpr uint8_t OR_IR					= 0x25;
+constexpr uint8_t AND_R					= 0x20;
+constexpr uint8_t AND_I					= 0x21;
+constexpr uint8_t AND_RI				= 0x22;
+constexpr uint8_t AND_IR				= 0x23;
 
-constexpr uint8_t XOR_R					= 0x26;
-constexpr uint8_t XOR_I					= 0x27;
-constexpr uint8_t XOR_RI				= 0x28;
-constexpr uint8_t XOR_IR				= 0x29;
+constexpr uint8_t OR_R					= 0x24;
+constexpr uint8_t OR_I					= 0x25;
+constexpr uint8_t OR_RI					= 0x26;
+constexpr uint8_t OR_IR					= 0x27;
 
-constexpr uint8_t NOT_R					= 0x2A;
+constexpr uint8_t XOR_R					= 0x28;
+constexpr uint8_t XOR_I					= 0x29;
+constexpr uint8_t XOR_RI				= 0x2A;
+constexpr uint8_t XOR_IR				= 0x2B;
 
-constexpr uint8_t SHL_R					= 0x2B;
-constexpr uint8_t SHL_I					= 0x2C;
-constexpr uint8_t SHL_RI				= 0x2D;
-constexpr uint8_t SHL_IR				= 0x2E;
+constexpr uint8_t NOT_R					= 0x2C;
 
-constexpr uint8_t SHR_R					= 0x2F;
-constexpr uint8_t SHR_I					= 0x30;
-constexpr uint8_t SHR_RI				= 0x31;
-constexpr uint8_t SHR_IR				= 0x32;
+constexpr uint8_t SHL_R					= 0x2D;
+constexpr uint8_t SHL_I					= 0x2E;
+constexpr uint8_t SHL_RI				= 0x2F;
+constexpr uint8_t SHL_IR				= 0x30;
 
-constexpr uint8_t CMP_R					= 0x33;
-constexpr uint8_t CMP_RI				= 0x34;
+constexpr uint8_t SHR_R					= 0x31;
+constexpr uint8_t SHR_I					= 0x32;
+constexpr uint8_t SHR_RI				= 0x33;
+constexpr uint8_t SHR_IR				= 0x34;
 
-constexpr uint8_t JMP					= 0x35;
-constexpr uint8_t JNZ					= 0x36;
-constexpr uint8_t JZ					= 0x37;
-constexpr uint8_t JNS					= 0x38;
-constexpr uint8_t JS					= 0x39;
-constexpr uint8_t JNC					= 0x3A;
-constexpr uint8_t JC					= 0x3B;
+constexpr uint8_t CMP_R					= 0x35;
+constexpr uint8_t CMP_RI				= 0x36;
+
+constexpr uint8_t JMP					= 0x37;
+constexpr uint8_t JNZ					= 0x38;
+constexpr uint8_t JZ					= 0x39;
+constexpr uint8_t JNS					= 0x3A;
+constexpr uint8_t JS					= 0x3B;
+constexpr uint8_t JNC					= 0x3C;
+constexpr uint8_t JC					= 0x3D;
 
 // Stack
-constexpr uint8_t PUSH_IM_W				= 0x3C;
-constexpr uint8_t PUSH_IM_B				= 0x3D;
-constexpr uint8_t PUSH_R				= 0x3E;
+constexpr uint8_t PUSH_IM_W				= 0x3E;
+constexpr uint8_t PUSH_IM_B				= 0x3F;
+constexpr uint8_t PUSH_R				= 0x40;
 
-constexpr uint8_t POP_R					= 0x3F;
-constexpr uint8_t POP_A					= 0x40;
+constexpr uint8_t POP_R					= 0x41;
+constexpr uint8_t POP_A					= 0x42;
 
 constexpr uint8_t HLT					= 0xFF;

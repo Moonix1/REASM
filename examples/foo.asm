@@ -10,4 +10,5 @@ _START:
 
 	CMP R1, #52
 	JZ _START
+	
 	HLT

@@ -493,6 +493,16 @@ Assemble::Assemble(std::string filePath) {
 					exit(1);
 				} break;
 				}
+			} else if (tok.value == "INC") {
+				Token reg = NextToken(pos, tokens);
+
+				program.push_back(INC_R);
+				program.push_back(StringToRegister(reg.value));
+			} else if (tok.value == "DEC") {
+				Token reg = NextToken(pos, tokens);
+
+				program.push_back(DEC_R);
+				program.push_back(StringToRegister(reg.value));
 			} else if (tok.value == "AND") {
 				Token dest = NextToken(pos, tokens);
 				switch (dest.type) {
