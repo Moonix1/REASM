@@ -790,9 +790,129 @@ Assemble::Assemble(std::string filePath) {
 					} break;
 					}
 				} break;
-				default: {
-					ERROR("invalid SUB destination!");
-					exit(1);
+				}
+			} else if (tok.value == "IGT") {
+				Token value1 = NextToken(pos, tokens);
+				switch (value1.type) {
+				case REG: {
+					Token value2 = NextTokenC(pos, tokens);
+					switch (value2.type) {
+					case REG: {
+						program.push_back(IGT_R);
+						program.push_back(StringToRegister(value1.value));
+						program.push_back(StringToRegister(value2.value));
+					} break;
+					case IMMEDIATE:
+					case HEX: {
+						program.push_back(IGT_RI);
+						program.push_back(StringToRegister(value1.value));
+						PushNumberU16(program, value2);
+					} break;
+					}
+				} break;
+				case IMMEDIATE:
+				case HEX: {
+					Token value2 = NextTokenC(pos, tokens);
+					switch (value2.type) {
+					case REG: {
+						program.push_back(IGT_RI);
+						program.push_back(StringToRegister(value1.value));
+						PushNumberU16(program, value2);
+					} break;
+					}
+				} break;
+				}
+			} else if (tok.value == "ILT") {
+				Token value1 = NextToken(pos, tokens);
+				switch (value1.type) {
+				case REG: {
+					Token value2 = NextTokenC(pos, tokens);
+					switch (value2.type) {
+					case REG: {
+						program.push_back(ILT_R);
+						program.push_back(StringToRegister(value1.value));
+						program.push_back(StringToRegister(value2.value));
+					} break;
+					case IMMEDIATE:
+					case HEX: {
+						program.push_back(ILT_RI);
+						program.push_back(StringToRegister(value1.value));
+						PushNumberU16(program, value2);
+					} break;
+					}
+				} break;
+				case IMMEDIATE:
+				case HEX: {
+					Token value2 = NextTokenC(pos, tokens);
+					switch (value2.type) {
+					case REG: {
+						program.push_back(ILT_RI);
+						program.push_back(StringToRegister(value1.value));
+						PushNumberU16(program, value2);
+					} break;
+					}
+				} break;
+				}
+			} else if (tok.value == "IGE") {
+				Token value1 = NextToken(pos, tokens);
+				switch (value1.type) {
+				case REG: {
+					Token value2 = NextTokenC(pos, tokens);
+					switch (value2.type) {
+					case REG: {
+						program.push_back(IGE_R);
+						program.push_back(StringToRegister(value1.value));
+						program.push_back(StringToRegister(value2.value));
+					} break;
+					case IMMEDIATE:
+					case HEX: {
+						program.push_back(IGE_RI);
+						program.push_back(StringToRegister(value1.value));
+						PushNumberU16(program, value2);
+					} break;
+					}
+				} break;
+				case IMMEDIATE:
+				case HEX: {
+					Token value2 = NextTokenC(pos, tokens);
+					switch (value2.type) {
+					case REG: {
+						program.push_back(IGE_RI);
+						program.push_back(StringToRegister(value1.value));
+						PushNumberU16(program, value2);
+					} break;
+					}
+				} break;
+				}
+			} else if (tok.value == "ILE") {
+				Token value1 = NextToken(pos, tokens);
+				switch (value1.type) {
+				case REG: {
+					Token value2 = NextTokenC(pos, tokens);
+					switch (value2.type) {
+					case REG: {
+						program.push_back(ILE_R);
+						program.push_back(StringToRegister(value1.value));
+						program.push_back(StringToRegister(value2.value));
+					} break;
+					case IMMEDIATE:
+					case HEX: {
+						program.push_back(ILE_RI);
+						program.push_back(StringToRegister(value1.value));
+						PushNumberU16(program, value2);
+					} break;
+					}
+				} break;
+				case IMMEDIATE:
+				case HEX: {
+					Token value2 = NextTokenC(pos, tokens);
+					switch (value2.type) {
+					case REG: {
+						program.push_back(ILT_RI);
+						program.push_back(StringToRegister(value1.value));
+						PushNumberU16(program, value2);
+					} break;
+					}
 				} break;
 				}
 			} else if (tok.value == "JMP") {
